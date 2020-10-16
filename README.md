@@ -1,7 +1,7 @@
 
 # platsec_athena_lambda
 
-This is a placeholder README.md for a new repository
+Repository for Athena Lambda code
 
 ### License
 
