@@ -31,8 +31,19 @@ class LambdaEnvironment :
     def athena_day(self):
         return self._athena_day
 
+    @property
+    def db(self):
+        return self._db
+
+    @property
+    def table(self):
+        return self._table
+
     def get_querydates(self):
         query_results={}
         query_date=f'year=\'{self._athena_year}\' AND month=\'{self._athena_month}\' AND day=\'{self._athena_day}\';'
+        source_clause =f'{self._db}.{self.table}'
+
         query_results["date_clause"]=query_date
+        query_results["source_clause"]=source_clause
         return query_results
