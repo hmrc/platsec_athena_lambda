@@ -71,6 +71,14 @@ def test_location_statements_count_must_equal_region_count():
 
     assert len(config.regions) == len(statements)
 
+@pytest.mark.config
+def test_location_statements_will_error_with_no_regions_specified():
+    config = get_config(regions=[])
+    with pytest.raises(IndexError) as excinfo:
+        statements = config.get_locations()
+    exception_msg = excinfo.value.args[0]
+    assert exception_msg == "No regions specified"
+
 def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account",regions=["eu-west-1","eu-west-2"]):
     test_date = str(datetime.datetime.today().isoformat())
     test_config = LambdaEnvironment(db,table,bucket,output,account,test_date,regions)
