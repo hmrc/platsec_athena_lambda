@@ -34,10 +34,29 @@ def test_config_statements_must_be_correctly_formatted():
     assert actual_source == expected_statement
 
 @pytest.mark.config
-def test_partition_statements_must_be_returned():
-    config = get_config
+def test_partition_statements_must_be_returned_for_each_region_specified():
+    config = get_config()
+    expected_statement_count = 2
 
-def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account",regions=[]):
+    statements = config.get_partitions()
+    assert expected_statement_count == len(statements)
+
+@pytest.mark.config
+def test_partition_statements_must_be_correctly_formatted():
+    config = get_config()
+    statement_count = 2
+    expected_statements = []
+    for i in range(len(config.regions)):
+        statement_to_test = [f'partition (region="{config.regions[i]}", month="{config.athena_month}", day="{config.athena_day}", year="{config.athena_year}")']
+        expected_statements.append(statement_to_test)
+
+    statements = config.get_partitions()
+
+    for expected_statement in expected_statements:
+        assert partition_check(expected_statement,expected_statements) == True
+
+
+def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account",regions=["eu-west-1","eu-west-2"]):
     test_date = str(datetime.datetime.today().isoformat())
     test_config = LambdaEnvironment(db,table,bucket,output,account,test_date,regions)
     return test_config
@@ -46,3 +65,9 @@ def get_statement(config):
     test_statement = Statement(config)
 
     return test_statement
+
+def partition_check(item, items):
+    if item in items:
+        return True
+    else:
+        return False
