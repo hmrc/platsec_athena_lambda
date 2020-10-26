@@ -33,9 +33,13 @@ def test_config_statements_must_be_correctly_formatted():
 
     assert actual_source == expected_statement
 
-def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account"):
+@pytest.mark.config
+def test_partition_statements_must_be_returned():
+    config = get_config
+
+def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account",regions=[]):
     test_date = str(datetime.datetime.today().isoformat())
-    test_config = LambdaEnvironment(db,table,bucket,output,account,test_date)
+    test_config = LambdaEnvironment(db,table,bucket,output,account,test_date,regions)
     return test_config
 
 def get_statement(config):
