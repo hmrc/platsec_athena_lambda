@@ -62,4 +62,6 @@ class LambdaEnvironment :
     def get_partitions(self):
         if len(self._regions) > 0 :
             return list(map(lambda a:f'partition (region="{a}", month="{self._athena_month}", day="{self._athena_day}", year="{self.athena_year}")',self._regions))
+        else:
+            raise IndexError("No regions specified")
 

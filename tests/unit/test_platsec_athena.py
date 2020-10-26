@@ -55,6 +55,12 @@ def test_partition_statements_must_be_correctly_formatted():
     for expected_statement in expected_statements:
         assert partition_check(expected_statement,expected_statements) == True
 
+@pytest.mark.config
+def test_partition_statements_will_error_with_no_regions_specified():
+    config = get_config(regions=[])
+    with pytest.raises(IndexError):
+        statements = config.get_partitions()
+
 
 def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account",regions=["eu-west-1","eu-west-2"]):
     test_date = str(datetime.datetime.today().isoformat())
