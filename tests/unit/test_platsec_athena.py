@@ -53,7 +53,7 @@ def test_partition_statements_must_be_correctly_formatted():
     statements = config.get_partitions()
 
     for expected_statement in expected_statements:
-        assert partition_check(expected_statement,expected_statements) == True
+        assert statements_check(expected_statement,expected_statements) == True
 
 @pytest.mark.config
 def test_partition_statements_will_error_with_no_regions_specified():
@@ -79,6 +79,19 @@ def test_location_statements_will_error_with_no_regions_specified():
     exception_msg = excinfo.value.args[0]
     assert exception_msg == "No regions specified"
 
+def test_location_statements_must_be_correctly_formatted():
+    config = get_config()
+    statement_count = 2
+    expected_statements = []
+    for i in range(len(config.regions)):
+        statement_to_test = [f' location "s3://{config.bucket}/AWSLogs/{config.account}/CloudTrail/{i}/{config.athena_year}/{config.athena_month}/{config.athena_day}/"']
+        expected_statements.append(statement_to_test)
+
+    statements = config.get_partitions()
+
+    for expected_statement in expected_statements:
+        assert statements_check(expected_statement,expected_statements) == True
+
 def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account",regions=["eu-west-1","eu-west-2"]):
     test_date = str(datetime.datetime.today().isoformat())
     test_config = LambdaEnvironment(db,table,bucket,output,account,test_date,regions)
@@ -89,7 +102,7 @@ def get_statement(config):
 
     return test_statement
 
-def partition_check(item, items):
+def statements_check(item, items):
     if item in items:
         return True
     else:

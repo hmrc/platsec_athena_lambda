@@ -40,6 +40,14 @@ class LambdaEnvironment :
         return self._table
 
     @property
+    def bucket(self):
+        return self._bucket
+
+    @property
+    def account (self):
+        return self._account
+
+    @property
     def regions(self):
         return self._regions
 
