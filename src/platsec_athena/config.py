@@ -65,3 +65,8 @@ class LambdaEnvironment :
         else:
             raise IndexError("No regions specified")
 
+    def get_locations(self):
+        if len(self._regions) > 0 :
+            return list(map(lambda a:f' location "s3://{self._bucket}/AWSLogs/{self._account}/CloudTrail/{a}/{self._athena_year}/{self.athena_month}/{self.athena_day}/"',self._regions))
+        else:
+            raise IndexError("No regions specified")
