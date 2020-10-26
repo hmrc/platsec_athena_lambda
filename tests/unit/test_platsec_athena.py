@@ -58,9 +58,10 @@ def test_partition_statements_must_be_correctly_formatted():
 @pytest.mark.config
 def test_partition_statements_will_error_with_no_regions_specified():
     config = get_config(regions=[])
-    with pytest.raises(IndexError):
+    with pytest.raises(IndexError) as excinfo:
         statements = config.get_partitions()
-
+    exception_msg = excinfo.value.args[0]
+    assert exception_msg == "No regions specified"
 
 def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account",regions=["eu-west-1","eu-west-2"]):
     test_date = str(datetime.datetime.today().isoformat())
