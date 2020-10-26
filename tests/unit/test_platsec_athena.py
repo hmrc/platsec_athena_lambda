@@ -3,6 +3,7 @@ import datetime
 import time
 from platsec_athena.config import LambdaEnvironment
 from platsec_athena.querying import Statement
+from platsec_athena.config import StatementType
 
 @pytest.mark.config
 def test_s3_bucket_location_must_be_correctly_formatted() :
@@ -79,6 +80,7 @@ def test_location_statements_will_error_with_no_regions_specified():
     exception_msg = excinfo.value.args[0]
     assert exception_msg == "No regions specified"
 
+@pytest.mark.config
 def test_location_statements_must_be_correctly_formatted():
     config = get_config()
     statement_count = 2
@@ -91,6 +93,24 @@ def test_location_statements_must_be_correctly_formatted():
 
     for expected_statement in expected_statements:
         assert statements_check(expected_statement,expected_statements) == True
+
+@pytest.mark.config
+def test_select_statement_must_be_correctly_formatted():
+    config = get_config()
+    expected_statement = f'SELECT * FROM {config.table} WHERE '
+
+    statement = config.get_statements(StatementType.SELECT)
+
+    assert expected_statement == statement
+
+@pytest.mark.config
+def test_location_statement_must_be_correctly_formatted():
+    config = get_config()
+    expected_statement = f' \'%{config.bucket}%\''
+
+    statement = config.get_statements(StatementType.BUCKET)
+
+    assert expected_statement == statement
 
 def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account",regions=["eu-west-1","eu-west-2"]):
     test_date = str(datetime.datetime.today().isoformat())

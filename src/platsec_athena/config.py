@@ -1,3 +1,10 @@
+from enum import Enum
+
+class StatementType(Enum):
+    SELECT = 1
+    BUCKET = 2
+
+
 class LambdaEnvironment :
     def __init__(self,db, table, bucket, output, account,eventstamp,regions
             ):
@@ -78,3 +85,10 @@ class LambdaEnvironment :
             return list(map(lambda a:f' location "s3://{self._bucket}/AWSLogs/{self._account}/CloudTrail/{a}/{self._athena_year}/{self.athena_month}/{self.athena_day}/"',self._regions))
         else:
             raise IndexError("No regions specified")
+
+    def get_statements(self,statement_type):
+       if statement_type == StatementType.SELECT :
+           return f'SELECT * FROM {self._table} WHERE '
+       else:
+           return f' \'%{self._bucket}%\''
+
