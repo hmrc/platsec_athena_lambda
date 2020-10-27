@@ -4,6 +4,7 @@ import time
 from platsec_athena.config import LambdaEnvironment
 from platsec_athena.querying import Statement
 from platsec_athena.config import StatementType
+from platsec_athena.partioning import Partition
 
 @pytest.mark.config
 def test_s3_bucket_location_must_be_correctly_formatted() :
@@ -112,10 +113,26 @@ def test_location_statement_must_be_correctly_formatted():
 
     assert expected_statement == statement
 
+@pytest.mark.partion
+def test_partioning_query_must_be_formatted_correctly():
+    config = get_config()
+    partition = get_partition(config)
+    config_partitions = config.get_partitions()
+    config_locations = config.get_locations()
+    expected_partition_query = f'ALTER TABLE {config.table} ADD IF NOT EXISTS {config_partitions[0]} {config_locations[0]} {config_partitions[1]} {config_locations[1]}'
+
+    partition_query = partition.get_query()
+
+    assert partition_query == expected_partition_query
+
 def get_config(db="test_db",table="test_table",bucket="test_bucket",output="test_output",account="test_account",regions=["eu-west-1","eu-west-2"]):
     test_date = str(datetime.datetime.today().isoformat())
     test_config = LambdaEnvironment(db,table,bucket,output,account,test_date,regions)
     return test_config
+
+def get_partition(config):
+    test_partition = Partition(config)
+    return test_partition
 
 def get_statement(config):
     test_statement = Statement(config)
