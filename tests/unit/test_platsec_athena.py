@@ -109,16 +109,16 @@ def test_location_statements_must_be_correctly_formatted():
     are formatted correctly
     '''
     config = get_config()
-    statement_count = 2
     expected_statements = []
     for i in range(len(config.regions)):
-        statement_to_test = [f' location "s3://{config.bucket}/AWSLogs/{config.account}/CloudTrail/{i}/{config.athena_year}/{config.athena_month}/{config.athena_day}/"']
+        statement_to_test = f' location "s3://{config.bucket}/AWSLogs/{config.account}/CloudTrail/{config.regions[i]}/{config.athena_year}/{config.athena_month}/{config.athena_day}/"'
         expected_statements.append(statement_to_test)
 
-    statements = config.get_partitions()
+    statements = config.get_locations()
 
     for expected_statement in expected_statements:
-        assert statements_check(expected_statement,expected_statements) == True
+        print(expected_statement)
+        assert statements_check(expected_statement,statements) == True
 
 @pytest.mark.config
 def test_select_statement_must_be_correctly_formatted():

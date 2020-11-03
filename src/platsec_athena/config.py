@@ -6,6 +6,10 @@ class StatementType(Enum):
 
 
 class LambdaEnvironment :
+    '''
+    A class that represents the configuration
+    environment for Athena
+    '''
     def __init__(self,db, table, bucket, output, account,eventstamp,regions
             ):
         self._db = db
