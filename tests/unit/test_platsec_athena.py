@@ -117,7 +117,6 @@ def test_location_statements_must_be_correctly_formatted():
     statements = config.get_locations()
 
     for expected_statement in expected_statements:
-        print(expected_statement)
         assert statements_check(expected_statement,statements) == True
 
 @pytest.mark.config
@@ -149,7 +148,7 @@ def test_location_statement_must_be_correctly_formatted():
 @pytest.mark.partition
 def test_partioning_query_must_be_formatted_correctly():
     '''
-    Tests that the partitioning query is correctly 
+    Tests that the partitioning query is correctly
     formatted
     '''
     config = get_config()
@@ -170,12 +169,11 @@ def test_query_factory_returns_specified_query_type(qt):
     returns the correct query
     '''
     sut = get_query_factory()
-    query = sut.get_query_type(qt.value)
     expected_query_type = qt.value
+    
+    query = sut.get_query(qt.value)
 
-    actual_query_type = query.get_query_type
-
-    assert actual_query_type ==  expected_query_type
+    assert query.query_type == expected_query_type
 
 
 #@pytest.mark.pciquery
